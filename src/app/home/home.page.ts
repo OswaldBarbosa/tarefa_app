@@ -40,7 +40,7 @@ export class HomePage {
         {
           text: 'Salvar',
           handler: (alertData) => {
-            if (alertData.task =! "")
+            if (alertData.task != "")
               this.tasksService.addTask(alertData.task, alertData.date)
             else {
               this.toast();
@@ -57,7 +57,7 @@ export class HomePage {
 
   async toast() {
     const toast = await this.toastController.create({
-      message: 'Campos obrigatórios não foram preenchidos',
+      message: 'Preencha uma tarefa!',
       duration: 2000
     })
 
