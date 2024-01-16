@@ -8,29 +8,63 @@
 
 <ion-content [fullscreen]="true">
 
-  <ion-list>
-    <ion-item-sliding>
-      <ion-item-options side="start">
-        <ion-item-option color="success">
-          <ion-icon slot="icon-only" name="archive"></ion-icon>
-        </ion-item-option>
-      </ion-item-options>
-  
-      <ion-item>
-        <ion-label>Sliding Item with Icons Only</ion-label>
+  <ion-segment [(ngModel)]="type" >
+    <ion-segment-button value="pending" layout="icon-start">
+      <ion-label>Pendentes</ion-label>
+      <ion-icon name="information-circle-outline"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="done" layout="icon-start">
+      <ion-icon name="checkmark-outline"></ion-icon>
+      <ion-label>Concluídas</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-list *ngIf="type === 'pending'">
+    <ion-item-sliding *ngFor="let task of tasksService.getTasks(); let i = index">
+
+      <ion-item *ngIf="!task.done">
+        <ion-label>{{task.value}}</ion-label>
+        <ion-checkbox slot="start" [(ngModel)]="task.done"></ion-checkbox>
+        <ion-badge color="warning" *ngIf="task.date.getDate()">{{task.date.getDate() + "/" + (task.date.getMonth()+1) +
+          "/" + (task.date.getFullYear()) }}</ion-badge>
       </ion-item>
 
       <ion-item-options side="end">
-        <ion-item-option color="success">
-          <ion-icon slot="icon-only" name="archive"></ion-icon>
+        <ion-item-option (click)="alertUpdate(i, task)" color="success">
+          <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+        </ion-item-option>
+        <ion-item-option (click)="alertDelete(i)" color="danger">
+          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
         </ion-item-option>
       </ion-item-options>
-  
+
     </ion-item-sliding>
   </ion-list>
 
-  <ion-fab slot="fixed" horizontal="end" vertical="bottom" >
-    <ion-fab-button (click)="alert()" color="danger">
+  <ion-list *ngIf="type === 'done'">
+    <ion-item-sliding *ngFor="let task of tasksService.getTasks(); let i = index">
+
+      <ion-item *ngIf="task.done">
+        <ion-label>{{task.value}}</ion-label>
+        <ion-checkbox slot="start" [(ngModel)]="task.done"></ion-checkbox>
+        <ion-badge color="warning" *ngIf="task.date.getDate()">{{task.date.getDate() + "/" + (task.date.getMonth()+1) +
+          "/" + (task.date.getFullYear()) }}</ion-badge>
+      </ion-item>
+
+      <ion-item-options side="end">
+        <ion-item-option (click)="alertUpdate(i, task)" color="success">
+          <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+        </ion-item-option>
+        <ion-item-option (click)="alertDelete(i)" color="danger">
+          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+
+    </ion-item-sliding>
+  </ion-list>
+
+  <ion-fab slot="fixed" horizontal="end" vertical="bottom">
+    <ion-fab-button (click)="alertAdd()" color="danger">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
